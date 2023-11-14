@@ -3,6 +3,7 @@ kind: StatefulSet
 metadata:
   name: {{.Release.Name}}-redis
 spec:
+  {{ if not .Values.withoutStorage }}
   volumeClaimTemplates:
     - metadata:
         name: redis
@@ -12,6 +13,7 @@ spec:
         resources:
           requests:
             storage: 1Gi
+  {{ end }}
   selector:
     matchLabels:
       app: {{.Release.Name}}-redis
@@ -32,10 +34,14 @@ spec:
               memory: 80Mi
           ports:
             - containerPort: 6379
+          {{ if not .Values.withoutStorage }}
           volumeMounts:
             - mountPath: /data
               name: redis
+          {{ end }}
+      {{ if not .Values.withoutStorage }}
       volumes:
         - name: redis
           persistentVolumeClaim:
             claimName: redis
+      {{ end }}
