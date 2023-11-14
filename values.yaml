@@ -1,0 +1,6 @@
+# Required
+host:
+
+# Optional
+issuer: letsencrypt
+replicas: 2
